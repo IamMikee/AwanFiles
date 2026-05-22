@@ -25,22 +25,11 @@ const App = () => {
         setSocket(socket);
     }, []);
 
-    const createRoom = async (): Promise<void> => {
-        try {
-            const res: Response = await fetch(
-                "http://localhost:3000/send/create-room",
-                {
-                    method: "GET",
-                },
-            );
-            const data: { roomId: string } = await res.json();
-            setRoomId(data.roomId);
-
-            // join room
-            socket?.emit("join-room", roomId);
-        } catch (err) {
-            console.error(err);
-        }
+    const createRoom = (): void => {
+        socket?.emit("create-room", (res: { roomId: string }) => {
+            setRoomId(res.roomId);
+            socket?.emit("ping");
+        });
     };
 
     const leaveRoom = (): void => {
