@@ -1,0 +1,13 @@
+import { Router, type Request, type Response } from "express";
+import sendRouter from "./send.js";
+// later on import all the routes here
+
+const router = Router();
+
+router.use(sendRouter);
+
+router.get("/", (req: Request, res: Response) => {
+    res.json({ msg: "server connected" });
+});
+
+export default router;
