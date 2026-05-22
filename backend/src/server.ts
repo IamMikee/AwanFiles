@@ -37,10 +37,22 @@ io.on("connection", (socket: Socket) => {
     console.log(`User connected: ${socket.id}`);
 
     // send ping
-    socket.on("join-room", (roomId: string): void => {
-        socket.join(roomId);
+    socket.on("ping", (): void => {
         console.log("ping");
     });
+
+    // create room
+    socket.on(
+        "create-room",
+        (callback: (res: { roomId: string }) => void): void => {
+            // create random ID for a room
+            const roomId: string = crypto.randomUUID();
+            socket.join(roomId);
+
+            // send roomId to client'
+            callback({ roomId });
+        },
+    );
 
     // leave room when finish
     socket.on(
