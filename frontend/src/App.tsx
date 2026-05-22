@@ -36,16 +36,32 @@ const App = () => {
             const data: { roomId: string } = await res.json();
             setRoomId(data.roomId);
 
-            socket?.emit("send-ping", "ping", roomId);
+            // join room
+            socket?.emit("join-room", roomId);
         } catch (err) {
             console.error(err);
         }
+    };
+
+    const leaveRoom = (): void => {
+        socket?.emit(
+            "leave-room",
+            roomId,
+            (res: { success: boolean; msg: string }) => {
+                if (res.success) {
+                    console.log("Left room:", res.msg);
+                } else {
+                    console.error("Failed to leave:", res.msg);
+                }
+            },
+        );
     };
 
     return (
         <>
             <section>
                 <button onClick={createRoom}>Generate QR</button>
+                <button onClick={leaveRoom}>finish sending</button>
             </section>
         </>
     );
